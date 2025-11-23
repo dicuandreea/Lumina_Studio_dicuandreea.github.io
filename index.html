@@ -7,279 +7,234 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@600;700&display=swap');
-      
-      body {
-        font-family: 'Inter', sans-serif;
-        background-color: #0f172a; /* Dark Mode background */
-        color: #f1f5f9; /* Light text */
-      }
-      
-      h1, h2, h3, h4, h5, h6 {
-        font-family: 'Playfair Display', serif;
-      }
-      
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-      .animate-fade-in {
-        animation: fadeIn 0.5s ease-out forwards;
-      }
-      
-      ::-webkit-scrollbar { width: 8px; }
-      ::-webkit-scrollbar-track { background: #1e293b; }
-      ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
-      ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f1f5f9;
+        }
+        
+        h1, h2, h3, h4, h5, h6 { font-family: 'Playfair Display', serif; }
+        
+        /* Ascundem paginile care nu sunt active */
+        .page-section { display: none; animation: fadeIn 0.5s ease-out; }
+        .page-section.active { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
-<body>
-    <div id="root"></div>
+<body class="flex flex-col min-h-screen">
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
-
-        // --- COMPONENTA ICON ---
-        const Icon = ({ name, size = 24, className = "" }) => {
-            useEffect(() => {
-                if (window.lucide) {
-                    window.lucide.createIcons();
-                }
-            });
-            return <i data-lucide={name} style={{ width: size, height: size }} className={className}></i>;
-        };
-
-        // --- DATELE APLICAȚIEI ---
-        const PageState = {
-          HOME: 'HOME',
-          PORTFOLIO: 'PORTFOLIO',
-          SERVICES: 'SERVICES',
-          SHOP: 'SHOP',
-          ABOUT: 'ABOUT',
-          CONTACT: 'CONTACT',
-          CHECKOUT: 'CHECKOUT'
-        };
-
-        const portfolioItems = [
-          { id: 1, title: "Fluiditate Urbană", description: "O reinterpretare a arhitecturii moderne folosind distorsiuni.", imageUrl: "https://picsum.photos/id/122/800/600", technique: "Liquify & Distortion" },
-          { id: 2, title: "Melancolie Cromatică", description: "Studiu de culoare și atmosferă moody.", imageUrl: "https://picsum.photos/id/106/800/600", technique: "Color Grading & Curves" },
-          { id: 3, title: "Dublă Expunere", description: "Portret contopit cu natura prin măști complexe.", imageUrl: "https://picsum.photos/id/338/800/600", technique: "Layer Blending" },
-          { id: 4, title: "Viteza Luminii", description: "Capturarea mișcării într-un cadru static.", imageUrl: "https://picsum.photos/id/203/800/600", technique: "Motion Blur" },
-          { id: 5, title: "Perspectiva Fracturată", description: "O viziune geometrică asupra realității.", imageUrl: "https://picsum.photos/id/216/800/600", technique: "Perspective Warp" },
-          { id: 6, title: "Neon Nocturn", description: "Luminile orașului într-o notă cyberpunk.", imageUrl: "https://picsum.photos/id/136/800/600", technique: "Split Toning" }
-        ];
-
-        const servicesList = [
-          { id: 1, title: "Editare Foto Basic", description: "Corecție culori, ajustare expunere, crop și îndreptare orizont.", price: "50 RON / imagine", icon: "camera" },
-          { id: 2, title: "Retușare Portret", description: "Curățare ten, albire dinți, accentuare ochi, dodge & burn.", price: "100 RON / imagine", icon: "edit-3" },
-          { id: 3, title: "Manipulare Digitală", description: "Remodelare corporală (Liquify), ajustări geometrice, efecte artistice.", price: "150 RON / imagine", icon: "pen-tool" },
-          { id: 4, title: "Restaurare Foto Vechi", description: "Reparare rupturi, colorizare imagini alb-negru, eliminare pete.", price: "200 RON / imagine", icon: "image" }
-        ];
-
-        const shopItems = [
-          { id: 101, title: "Preset Pack: Cyberpunk", description: "5 preseturi Lightroom pentru un look futurist.", imageUrl: "https://picsum.photos/id/134/600/600", type: "Digital Asset", price: 49 },
-          { id: 102, title: "Print: The Lonely Mountain", description: "Print de înaltă rezoluție (A2), hârtie Fine Art.", imageUrl: "https://picsum.photos/id/136/600/600", type: "Fine Art Print", price: 199 },
-          { id: 103, title: "Preset Pack: Cinematic", description: "Tonuri de film pentru fotografiile tale de stradă.", imageUrl: "https://picsum.photos/id/149/600/600", type: "Digital Asset", price: 39 },
-          { id: 104, title: "Print: Urban Decay", description: "Print canvas, gata de agățat pe perete.", imageUrl: "https://picsum.photos/id/155/600/600", type: "Canvas Print", price: 249 },
-          { id: 105, title: "Tutorial: Liquify Masterclass", description: "Video curs de 2 ore despre tehnici avansate.", imageUrl: "https://picsum.photos/id/160/600/600", type: "Video Course", price: 99 },
-          { id: 106, title: "Print: Ocean Dreams", description: "Print metalic lucios, culori vibrante.", imageUrl: "https://picsum.photos/id/184/600/600", type: "Metal Print", price: 299 }
-        ];
-
-        // --- COMPONENTE VIZUALE ---
-
-        // 1. Layout Principal
-        const Layout = ({ children, currentPage, setPage, cartCount }) => {
-            const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-            
-            const navItems = [
-                { label: 'Acasă', value: PageState.HOME },
-                { label: 'Portofoliu', value: PageState.PORTFOLIO },
-                { label: 'Servicii', value: PageState.SERVICES },
-                { label: 'Magazin', value: PageState.SHOP },
-                { label: 'Despre', value: PageState.ABOUT },
-                { label: 'Contact', value: PageState.CONTACT },
-            ];
-
-            const handleNavClick = (page) => {
-                setPage(page);
-                setIsMobileMenuOpen(false);
-            };
-
-            return (
-                <div className="min-h-screen flex flex-col">
-                    <nav className="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-sm border-b border-slate-700 shadow-lg">
-                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                            <div className="flex justify-between items-center h-16">
-                                <div className="flex-shrink-0 flex items-center cursor-pointer" onClick={() => handleNavClick(PageState.HOME)}>
-                                    <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600 font-serif">
-                                        Lumina Studio
-                                    </span>
-                                </div>
-                                <div className="hidden md:flex space-x-8 items-center">
-                                    {navItems.map((item) => (
-                                        <button key={item.value} onClick={() => handleNavClick(item.value)} className={`text-sm font-medium transition-colors hover:text-purple-400 ${currentPage === item.value ? 'text-purple-400' : 'text-slate-300'}`}>
-                                            {item.label}
-                                        </button>
-                                    ))}
-                                    <button onClick={() => handleNavClick(PageState.CHECKOUT)} className="relative p-2 text-slate-300 hover:text-purple-400 transition-colors flex items-center">
-                                        <Icon name="shopping-cart" size={24} />
-                                        {cartCount > 0 && (
-                                            <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-purple-600 rounded-full">
-                                                {cartCount}
-                                            </span>
-                                        )}
-                                    </button>
-                                </div>
-                                <div className="md:hidden flex items-center">
-                                    <button onClick={() => handleNavClick(PageState.CHECKOUT)} className="p-2 mr-2 text-slate-300 hover:text-purple-400 relative flex items-center">
-                                         <Icon name="shopping-cart" size={24} />
-                                         {cartCount > 0 && (
-                                            <span className="absolute top-0 right-0 bg-purple-600 rounded-full h-4 w-4 flex items-center justify-center text-[10px] text-white">
-                                                {cartCount}
-                                            </span>
-                                         )}
-                                    </button>
-                                    <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 text-slate-300 hover:text-white focus:outline-none flex items-center">
-                                        <Icon name={isMobileMenuOpen ? "x" : "menu"} size={24} />
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        {isMobileMenuOpen && (
-                            <div className="md:hidden bg-slate-800 border-b border-slate-700">
-                                <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                                    {navItems.map((item) => (
-                                        <button key={item.value} onClick={() => handleNavClick(item.value)} className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium ${currentPage === item.value ? 'bg-slate-900 text-purple-400' : 'text-slate-300 hover:bg-slate-700 hover:text-white'}`}>
-                                            {item.label}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </nav>
-                    <main className="flex-grow">
-                        {children}
-                    </main>
-                    <footer className="bg-slate-950 border-t border-slate-800 py-8">
-                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                            <div className="flex flex-col md:flex-row justify-between items-center">
-                                <div className="mb-4 md:mb-0 text-center md:text-left">
-                                    <span className="text-xl font-serif font-bold text-slate-200">Lumina Studio</span>
-                                    <p className="text-slate-500 text-sm mt-1">Artă digitală & Prelucrare Foto</p>
-                                </div>
-                                <div className="flex space-x-6">
-                                    <a href="#" className="text-slate-400 hover:text-purple-400 transition-colors flex items-center"><Icon name="instagram" size={20} /></a>
-                                    <a href="#" className="text-slate-400 hover:text-purple-400 transition-colors flex items-center"><Icon name="facebook" size={20} /></a>
-                                    <a href="#" className="text-slate-400 hover:text-purple-400 transition-colors flex items-center"><Icon name="mail" size={20} /></a>
-                                </div>
-                            </div>
-                            <div className="mt-8 text-center text-slate-600 text-sm">
-                                &copy; {new Date().getFullYear()} Lumina Studio
-                            </div>
-                        </div>
-                    </footer>
+    <nav class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-sm border-b border-slate-700 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="showPage('home')">
+                    <span class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600 font-serif">
+                        Lumina Studio
+                    </span>
                 </div>
-            );
-        };
 
-        // 2. Pagina Acasă (Home)
-        const Home = ({ setPage }) => (
-            <div className="animate-fade-in">
-                <div className="relative overflow-hidden">
-                    <div className="absolute inset-0 bg-[url('https://picsum.photos/id/132/1920/1080')] bg-cover bg-center opacity-20"></div>
-                    <div className="absolute inset-0 bg-gradient-to-b from-slate-900/80 via-slate-900/90 to-slate-900"></div>
-                    <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 flex flex-col items-center text-center">
-                        <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-white mb-6 font-serif">
-                            Transformăm Realitatea în <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">Artă</span>
-                        </h1>
-                        <p className="text-lg md:text-xl text-slate-300 max-w-2xl mb-10">
-                            Servicii profesionale de editare foto și creație vizuală. 
-                            Descoperă puterea tehnicilor de manipulare digitală.
-                        </p>
-                        <div className="flex flex-col sm:flex-row gap-4">
-                            <button onClick={() => setPage(PageState.SHOP)} className="px-8 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-full transition-all transform hover:scale-105 shadow-lg shadow-purple-900/20 flex items-center justify-center gap-2">
-                                Cumpără Produse <Icon name="arrow-right" size={18} />
-                            </button>
-                            <button onClick={() => setPage(PageState.PORTFOLIO)} className="px-8 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-full transition-all border border-slate-700">
-                                Vezi Lucrări
-                            </button>
-                        </div>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <button onclick="showPage('home')" class="text-sm font-medium text-slate-300 hover:text-purple-400 transition-colors">Acasă</button>
+                    <button onclick="showPage('portfolio')" class="text-sm font-medium text-slate-300 hover:text-purple-400 transition-colors">Portofoliu</button>
+                    <button onclick="showPage('services')" class="text-sm font-medium text-slate-300 hover:text-purple-400 transition-colors">Servicii</button>
+                    <button onclick="showPage('about')" class="text-sm font-medium text-slate-300 hover:text-purple-400 transition-colors">Despre</button>
+                    <button onclick="showPage('contact')" class="text-sm font-medium text-slate-300 hover:text-purple-400 transition-colors">Contact</button>
+                </div>
+
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="p-2 text-slate-300 hover:text-white">
+                        <i data-lucide="menu"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-800 border-b border-slate-700">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <button onclick="showPage('home')" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-slate-700 hover:text-white">Acasă</button>
+                <button onclick="showPage('portfolio')" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-slate-700 hover:text-white">Portofoliu</button>
+                <button onclick="showPage('about')" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-slate-700 hover:text-white">Despre</button>
+                <button onclick="showPage('contact')" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-slate-700 hover:text-white">Contact</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow">
+        
+        <div id="home" class="page-section active">
+            <div class="relative overflow-hidden">
+                <div class="absolute inset-0 bg-[url('https://picsum.photos/id/132/1920/1080')] bg-cover bg-center opacity-20"></div>
+                <div class="absolute inset-0 bg-gradient-to-b from-slate-900/80 via-slate-900/90 to-slate-900"></div>
+                <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 flex flex-col items-center text-center">
+                    <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-white mb-6 font-serif">
+                        Transformăm Realitatea în <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">Artă</span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-slate-300 max-w-2xl mb-10">
+                        Servicii profesionale de editare foto și creație vizuală. 
+                        Descoperă puterea tehnicilor de manipulare digitală.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button onclick="showPage('portfolio')" class="px-8 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-full transition-all shadow-lg flex items-center justify-center gap-2">
+                            Vezi Lucrări <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        </button>
                     </div>
                 </div>
-                <div className="py-16 bg-slate-900">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <div className="p-6 bg-slate-800/50 rounded-2xl border border-slate-700/50 backdrop-blur-sm">
-                                <div className="w-12 h-12 bg-purple-900/30 rounded-lg flex items-center justify-center text-purple-400 mb-4"><Icon name="sparkles" /></div>
-                                <h3 className="text-xl font-bold text-white mb-2">Creativitate</h3>
-                                <p className="text-slate-400">Fiecare proiect este unic și tratat cu atenție artistică.</p>
-                            </div>
-                            <div className="p-6 bg-slate-800/50 rounded-2xl border border-slate-700/50 backdrop-blur-sm">
-                                <div className="w-12 h-12 bg-pink-900/30 rounded-lg flex items-center justify-center text-pink-400 mb-4"><Icon name="layers" /></div>
-                                <h3 className="text-xl font-bold text-white mb-2">Tehnică Avansată</h3>
-                                <p className="text-slate-400">Utilizăm ultimele tehnologii în manipularea imaginii.</p>
-                            </div>
-                            <div className="p-6 bg-slate-800/50 rounded-2xl border border-slate-700/50 backdrop-blur-sm">
-                                <div className="w-12 h-12 bg-blue-900/30 rounded-lg flex items-center justify-center text-blue-400 mb-4"><Icon name="zap" /></div>
-                                <h3 className="text-xl font-bold text-white mb-2">Eficiență</h3>
-                                <p className="text-slate-400">Livrare rapidă în format digital de înaltă rezoluție.</p>
-                            </div>
+            </div>
+        </div>
+
+        <div id="portfolio" class="page-section">
+            <div class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                <h2 class="text-3xl md:text-4xl font-bold text-white font-serif mb-12 text-center">Portofoliu</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-slate-800 rounded-xl overflow-hidden shadow-xl border border-slate-700">
+                        <img src="https://picsum.photos/id/122/800/600" class="w-full h-64 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-white mb-2">Fluiditate Urbană</h3>
+                            <p class="text-slate-400 text-sm">O reinterpretare a arhitecturii moderne.</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800 rounded-xl overflow-hidden shadow-xl border border-slate-700">
+                        <img src="https://picsum.photos/id/106/800/600" class="w-full h-64 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-white mb-2">Melancolie Cromatică</h3>
+                            <p class="text-slate-400 text-sm">Studiu de culoare și atmosferă moody.</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800 rounded-xl overflow-hidden shadow-xl border border-slate-700">
+                        <img src="https://picsum.photos/id/338/800/600" class="w-full h-64 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-white mb-2">Dublă Expunere</h3>
+                            <p class="text-slate-400 text-sm">Portret contopit cu natura.</p>
                         </div>
                     </div>
                 </div>
             </div>
-        );
+        </div>
 
-        // 3. Pagina Portofoliu
-        const Portfolio = () => {
-            return (
-                <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto animate-fade-in">
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl md:text-4xl font-bold text-white font-serif mb-4">Portofoliu Lucrări</h2>
-                        <p className="text-slate-400 max-w-2xl mx-auto">Selecție de proiecte recente prelucrate digital.</p>
+        <div id="services" class="page-section">
+            <div class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                <h2 class="text-3xl md:text-4xl font-bold text-white font-serif mb-12 text-center">Servicii</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700">
+                        <i data-lucide="camera" class="text-purple-400 w-8 h-8 mb-4"></i>
+                        <h3 class="text-2xl font-bold text-white mb-3">Editare Foto Basic</h3>
+                        <p class="text-slate-400">Corecție culori, ajustare expunere, crop.</p>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {portfolioItems.map((item) => (
-                            <div key={item.id} className="group relative bg-slate-800 rounded-xl overflow-hidden shadow-xl border border-slate-700 transition-all hover:border-purple-500/50">
-                                <div className="relative h-64 overflow-hidden">
-                                    <img src={item.imageUrl} alt={item.title} className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 
-                                        ${item.technique.includes('Liquify') ? 'filter contrast-125 hue-rotate-15' : ''}
-                                        ${item.technique.includes('Color') ? 'filter sepia-[.4] contrast-125' : ''}
-                                    `} />
-                                    <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-medium text-white border border-white/10">
-                                        {item.technique}
-                                    </div>
-                                </div>
-                                <div className="p-6">
-                                    <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
-                                    <p className="text-slate-400 text-sm mb-4">{item.description}</p>
-                                </div>
+                    <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700">
+                        <i data-lucide="pen-tool" class="text-purple-400 w-8 h-8 mb-4"></i>
+                        <h3 class="text-2xl font-bold text-white mb-3">Manipulare Digitală</h3>
+                        <p class="text-slate-400">Efecte artistice și compoziții complexe.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="about" class="page-section">
+            <div class="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+                <h2 class="text-3xl md:text-4xl font-bold text-white font-serif mb-12 text-center">Echipa Noastră</h2>
+                <div class="flex flex-col gap-8">
+                    
+                    <div class="bg-slate-800 rounded-2xl p-8 md:p-12 border border-slate-700 shadow-xl">
+                        <div class="flex flex-col md:flex-row gap-8 items-center">
+                            <div class="w-full md:w-1/3">
+                                <img src="https://dicuandreea.github.io/Lumina_Studio_dicuandreea.github.io/andreea.jpg" alt="Dicu Andreea" class="rounded-full w-48 h-48 mx-auto object-cover border-4 border-purple-500 shadow-lg">
                             </div>
-                        ))}
+                            <div class="w-full md:w-2/3 text-center md:text-left">
+                                <h3 class="text-2xl font-bold text-white mb-1">Dicu Andreea</h3>
+                                <p class="text-purple-400 font-medium italic mb-4">Graphic Designer</p>
+                                <p class="text-slate-400 leading-relaxed">"Creativitatea este limbajul prin care dau viață ideilor. În proiectul nostru, mă ocup de ilustrații și compoziție vizuală."</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            );
-        };
 
-        // 4. Pagina Servicii
-        const Services = ({ setPage }) => (
-            <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto animate-fade-in">
-                <div className="text-center mb-16">
-                    <h2 className="text-3xl md:text-4xl font-bold text-white font-serif mb-4">Serviciile Noastre</h2>
-                    <p className="text-slate-400 max-w-2xl mx-auto">Oferte personalizate pentru nevoile tale vizuale.</p>
+                    <div class="bg-slate-800 rounded-2xl p-8 md:p-12 border border-slate-700 shadow-xl">
+                        <div class="flex flex-col md:flex-row gap-8 items-center">
+                            <div class="w-full md:w-1/3">
+                                <img src="https://dicuandreea.github.io/Lumina_Studio_dicuandreea.github.io/andra.jpg" alt="Ghiță Andra-Elena" class="rounded-full w-48 h-48 mx-auto object-cover border-4 border-purple-500 shadow-lg">
+                            </div>
+                            <div class="w-full md:w-2/3 text-center md:text-left">
+                                <h3 class="text-2xl font-bold text-white mb-1">Ghiță Andra-Elena</h3>
+                                <p class="text-purple-400 font-medium italic mb-4">Fotograf & Editor Foto</p>
+                                <p class="text-slate-400 leading-relaxed">"Îmi place să transform momente în povești vizuale. Mă ocup de fotografie și editarea detaliată."</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-800 rounded-2xl p-8 md:p-12 border border-slate-700 shadow-xl">
+                        <div class="flex flex-col md:flex-row gap-8 items-center">
+                            <div class="w-full md:w-1/3">
+                                <img src="https://dicuandreea.github.io/Lumina_Studio_dicuandreea.github.io/cristina.jpg" alt="Iordache Cristina Elena" class="rounded-full w-48 h-48 mx-auto object-cover border-4 border-purple-500 shadow-lg">
+                            </div>
+                            <div class="w-full md:w-2/3 text-center md:text-left">
+                                <h3 class="text-2xl font-bold text-white mb-1">Iordache Cristina Elena</h3>
+                                <p class="text-purple-400 font-medium italic mb-4">Web Developer & UX Designer</p>
+                                <p class="text-slate-400 leading-relaxed">"Pentru mine, tehnologia este o formă de artă. Mă ocup de structura platformei și experiența utilizatorului."</p>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {servicesList.map((service) => (
-                        <div key={service.id} className="bg-slate-800 p-8 rounded-2xl border border-slate-700 hover:border-purple-500 transition-colors shadow-lg">
-                            <div className="flex items-start justify-between mb-6">
-                                <div className="p-3 bg-slate-900 rounded-xl text-purple-400 border border-slate-700 flex items-center justify-center">
-                                    <Icon name={service.icon} size={32} />
-                                </div>
+            </div>
+        </div>
+
+        <div id="contact" class="page-section">
+            <div class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white font-serif mb-6">Contact</h2>
+                        <p class="text-slate-400 mb-8">Trimite-ne un mesaj și vom reveni cu un răspuns.</p>
+                        <div class="space-y-6 text-slate-300">
+                            <p><i data-lucide="mail" class="inline mr-2 text-purple-400"></i> Lumina_studio@gmail.com</p>
+                            <p><i data-lucide="map-pin" class="inline mr-2 text-purple-400"></i> București, Sector 2</p>
+                        </div>
+                    </div>
+                    <form class="bg-slate-800 p-8 rounded-2xl border border-slate-700 space-y-6">
+                        <input type="text" placeholder="Nume" class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-2 text-white">
+                        <input type="email" placeholder="Email" class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-2 text-white">
+                        <textarea rows="4" placeholder="Mesaj" class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-2 text-white"></textarea>
+                        <button class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg">Trimite</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-950 border-t border-slate-800 py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center text-slate-600 text-sm">
+            &copy; 2024 Lumina Studio
+        </div>
+    </footer>
+
+    <script>
+        // Initializare Iconițe
+        lucide.createIcons();
+
+        // Functie Navigare
+        function showPage(pageId) {
+            // Ascunde toate paginile
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            // Arata pagina dorita
+            document.getElementById(pageId).classList.add('active');
+            // Inchide meniul mobil daca e deschis
+            document.getElementById('mobile-menu').classList.add('hidden');
+            // Scroll sus
+            window.scrollTo(0,0);
+        }
+
+        // Meniu Mobil
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>
