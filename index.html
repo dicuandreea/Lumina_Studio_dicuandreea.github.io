@@ -376,73 +376,54 @@
             </div>
         );
 
-        // 6. Pagina Despre (About)
-     import React from 'react';
+      // 6. Pagina Despre (About)
+        const About = () => {
+            const authors = [
+                {
+                    name: "Dicu Andreea",
+                    role: "Graphic Designer",
+                    desc: "Creativitatea este limbajul prin care dau viață ideilor. În proiectul nostru, mă ocup de ilustrații, compoziție vizuală și identitate grafică, pentru ca fiecare pagină să transmită emoție și claritate.",
+                    img: "https://dicuandreea.github.io/Lumina_Studio_dicuandreea.github.io/andreea.jpg"
+                },
+                {
+                    name: "Ghiță Andra-Elena",
+                    role: "Fotograf & Editor Foto",
+                    desc: "Îmi place să transform momente în povești vizuale. Contribuția mea la proiect constă în realizarea fotografiilor, editarea detaliată și crearea unei atmosfere vizuale care completează perfect tema.",
+                    img: "https://dicuandreea.github.io/Lumina_Studio_dicuandreea.github.io/andra.jpg"
+                },
+                {
+                    name: "Iordache Cristina Elena",
+                    role: "Web Developer & UX Designer",
+                    desc: "Pentru mine, tehnologia este o formă de artă. În acest proiect lucrez la structura platformei, optimizarea experienței utilizatorului și implementarea funcționalităților care fac navigarea intuitivă.",
+                    img: "https://dicuandreea.github.io/Lumina_Studio_dicuandreea.github.io/cristina.jpg"
+                }
+            ];
 
-const About = () => {
-  // Datele sunt separate de design pentru a fi ușor de modificat
-  const authors = [
-    {
-      name: "Dicu Andreea",
-      role: "Graphic Designer",
-      desc: "Creativitatea este limbajul prin care dau viață ideilor. În proiectul nostru, mă ocup de ilustrații, compoziție vizuală și identitate grafică, pentru ca fiecare pagină să transmită emoție și claritate.",
-      img: "https://picsum.photos/id/64/400/400" // Poți schimba ID-ul pozei pentru fiecare
-    },
-    {
-      name: "Ghiță Andra-Elena",
-      role: "Fotograf & Editor Foto",
-      desc: "Îmi place să transform momente în povești vizuale. Contribuția mea la proiect constă în realizarea fotografiilor, editarea detaliată și crearea unei atmosfere vizuale care completează perfect tema.",
-      img: "https://picsum.photos/id/65/400/400"
-    },
-    {
-      name: "Iordache Cristina Elena",
-      role: "Web Developer & UX Designer",
-      desc: "Pentru mine, tehnologia este o formă de artă. În acest proiect lucrez la structura platformei, optimizarea experienței utilizatorului și implementarea funcționalităților care fac navigarea intuitivă.",
-      img: "https://picsum.photos/id/66/400/400"
-    }
-  ];
+            return (
+                <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto animate-fade-in">
+                    <h2 className="text-3xl md:text-4xl font-bold text-white font-serif mb-12 text-center">
+                        Echipa Noastră
+                    </h2>
 
-  return (
-    <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto animate-fade-in">
-      
-      {/* Titlu Principal al Secțiunii */}
-      <h2 className="text-3xl md:text-4xl font-bold text-white font-serif mb-12 text-center">
-        Echipa Noastră
-      </h2>
-
-      {/* Container pentru carduri cu spațiere automată (gap-8) */}
-      <div className="flex flex-col gap-8">
-        {authors.map((author, index) => (
-          <div 
-            key={index} 
-            className="bg-slate-800 rounded-2xl p-8 md:p-12 border border-slate-700 shadow-xl hover:border-purple-500/30 transition-colors duration-300"
-          >
-            <div className="flex flex-col md:flex-row gap-8 items-center">
-              {/* Imagine */}
-              <div className="w-full md:w-1/3">
-                <img 
-                  src={author.img} 
-                  alt={`Poză cu ${author.name}`} 
-                  className="rounded-full w-48 h-48 mx-auto object-cover border-4 border-purple-500 shadow-lg grayscale hover:grayscale-0 transition-all duration-500" 
-                />
-              </div>
-              
-              {/* Text */}
-              <div className="w-full md:w-2/3 text-center md:text-left">
-                <h3 className="text-2xl font-bold text-white mb-1">{author.name}</h3>
-                <p className="text-purple-400 font-medium italic mb-4">{author.role}</p>
-                <p className="text-slate-400 leading-relaxed">"{author.desc}"</p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-export default About;
-
+                    <div className="flex flex-col gap-8">
+                        {authors.map((author, index) => (
+                            <div key={index} className="bg-slate-800 rounded-2xl p-8 md:p-12 border border-slate-700 shadow-xl hover:border-purple-500/30 transition-colors duration-300">
+                                <div className="flex flex-col md:flex-row gap-8 items-center">
+                                    <div className="w-full md:w-1/3">
+                                        <img src={author.img} alt={`Poză cu ${author.name}`} className="rounded-full w-48 h-48 mx-auto object-cover border-4 border-purple-500 shadow-lg grayscale hover:grayscale-0 transition-all duration-500" />
+                                    </div>
+                                    <div className="w-full md:w-2/3 text-center md:text-left">
+                                        <h3 className="text-2xl font-bold text-white mb-1">{author.name}</h3>
+                                        <p className="text-purple-400 font-medium italic mb-4">{author.role}</p>
+                                        <p className="text-slate-400 leading-relaxed">"{author.desc}"</p>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
         // 7. Pagina Contact
         const Contact = () => {
             const [submitted, setSubmitted] = useState(false);
